@@ -14,29 +14,38 @@ export class StoriesListStore {
     this.fetchStoriesList = fetchStoriesList;
   }
 
-  async initialize() {
-    return this.cacheStoriesList();
-  }
+  initialize(sync: false): Promise<void>;
 
-  initializeSync() {
-    return this.cacheStoriesListSync();
+  initialize(sync: true): void;
+
+  initialize(sync: boolean) {
+    return sync ? this.cacheStoriesList(true) : this.cacheStoriesList(false);
   }
 
   async onStoriesChanged() {
     this.storiesList = await this.fetchStoriesList();
   }
 
-  async cacheStoriesList() {
-    this.storiesList = await this.fetchStoriesList();
-  }
+  cacheStoriesList(sync: false): Promise<void>;
 
-  async cacheStoriesListSync() {
-    this.storiesList = this.fetchStoriesList() as StoriesList;
-    if (!this.storiesList.v) {
-      throw new Error(
-        `fetchStoriesList() didn't return a stories list, did you pass an async version then call initializeSync()?`
-      );
+  cacheStoriesList(sync: true): void;
+
+  cacheStoriesList(sync: boolean): Promise<void> | void {
+    const fetchResult = this.fetchStoriesList();
+
+    if (sync) {
+      this.storiesList = fetchResult as StoriesList;
+      if (!this.storiesList.v) {
+        throw new Error(
+          `fetchStoriesList() didn't return a stories list, did you pass an async version then call initializeSync()?`
+        );
+      }
+      return null;
     }
+
+    return Promise.resolve(fetchResult).then((storiesList) => {
+      this.storiesList = storiesList;
+    });
   }
 
   storyIdFromSpecifier(specifier: StorySpecifier) {

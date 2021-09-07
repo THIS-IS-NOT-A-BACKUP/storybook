@@ -38,6 +38,7 @@ function focusInInput(event: Event) {
 }
 
 type InitialRenderPhase = 'init' | 'loaded' | 'rendered' | 'done';
+type MaybePromise<T> = Promise<T> | T;
 
 export class WebPreview<TFramework extends AnyFramework> {
   channel: Channel;
@@ -94,15 +95,19 @@ export class WebPreview<TFramework extends AnyFramework> {
     }
   }
 
-  async initialize({ cacheAllCSFFiles = false }: { cacheAllCSFFiles?: boolean } = {}) {
-    await this.storyStore.initialize({ cacheAllCSFFiles });
-    await this.setupListenersAndRenderSelection();
-  }
+  initialize({
+    cacheAllCSFFiles = false,
+    sync = false,
+  }: { cacheAllCSFFiles?: boolean; sync?: boolean } = {}): Promise<void> {
+    if (sync) {
+      this.storyStore.initialize({ cacheAllCSFFiles, sync: true });
+      // NOTE: we don't await this, but return the promise so the caller can await it if they want
+      return this.setupListenersAndRenderSelection();
+    }
 
-  initializeSync({ cacheAllCSFFiles = false }: { cacheAllCSFFiles?: boolean } = {}) {
-    this.storyStore.initializeSync({ cacheAllCSFFiles });
-    // NOTE: we don't await this, but return the promise so the caller can await it if they want
-    return this.setupListenersAndRenderSelection();
+    return this.storyStore
+      .initialize({ cacheAllCSFFiles, sync: false })
+      .then(() => this.setupListenersAndRenderSelection());
   }
 
   async setupListenersAndRenderSelection() {
@@ -306,7 +311,10 @@ export class WebPreview<TFramework extends AnyFramework> {
   async renderDocs({ story }: { story: Story<TFramework> }) {
     const { id, title, name } = story;
     const element = this.view.prepareForDocs();
-    const csfFile: CSFFile<TFramework> = await this.storyStore.loadCSFFileByStoryId(id);
+    const csfFile: CSFFile<TFramework> = await this.storyStore.loadCSFFileByStoryId({
+      storyId: id,
+      sync: false,
+    });
     const docsContext = {
       id,
       title,

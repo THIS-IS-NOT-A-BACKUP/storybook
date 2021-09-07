@@ -30,6 +30,8 @@ import { normalizeInputTypes } from './normalizeInputTypes';
 import { inferArgTypes } from './inferArgTypes';
 import { inferControls } from './inferControls';
 
+type MaybePromise<T> = Promise<T> | T;
+
 // TODO -- what are reasonable values for these?
 const CSF_CACHE_SIZE = 100;
 const STORY_CACHE_SIZE = 1000;
@@ -97,20 +99,28 @@ export class StoryStore<TFramework extends AnyFramework> {
     this.prepareStoryWithCache = memoize(STORY_CACHE_SIZE)(prepareStory) as typeof prepareStory;
   }
 
-  async initialize({ cacheAllCSFFiles = false }: { cacheAllCSFFiles?: boolean } = {}) {
-    await this.storiesList.initialize();
+  initialize(args: { sync: false; cacheAllCSFFiles?: boolean }): Promise<void>;
 
-    if (cacheAllCSFFiles) {
-      await this.cacheAllCSFFiles();
+  initialize(args: { sync: true; cacheAllCSFFiles?: boolean }): void;
+
+  initialize({
+    sync,
+    cacheAllCSFFiles = false,
+  }: {
+    sync: boolean;
+    cacheAllCSFFiles?: boolean;
+  }): MaybePromise<void> {
+    if (sync) {
+      this.storiesList.initialize(true);
+      if (cacheAllCSFFiles) {
+        this.cacheAllCSFFiles(true);
+      }
+      return null;
     }
-  }
 
-  initializeSync({ cacheAllCSFFiles = false }: { cacheAllCSFFiles?: boolean } = {}) {
-    this.storiesList.initializeSync();
-
-    if (cacheAllCSFFiles) {
-      this.cacheAllCSFFilesSync();
-    }
+    return this.storiesList
+      .initialize(false)
+      .then(() => (cacheAllCSFFiles ? this.cacheAllCSFFiles(false) : null));
   }
 
   updateGlobalAnnotations(globalAnnotations: GlobalAnnotations<TFramework>) {
@@ -123,78 +133,99 @@ export class StoryStore<TFramework extends AnyFramework> {
     this.importFn = importFn;
 
     // We need to refetch the stories list as it may have changed too
-    await this.storiesList.cacheStoriesList();
+    await this.storiesList.cacheStoriesList(false);
 
     if (this.cachedCSFFiles) {
-      await this.cacheAllCSFFiles();
+      await this.cacheAllCSFFiles(false);
     }
   }
 
-  async loadCSFFileByStoryId(storyId: StoryId): Promise<CSFFile<TFramework>> {
-    const { importPath, title } = this.storiesList.storyIdToMetadata(storyId);
-    const moduleExports = await this.importFn(importPath);
-    return this.processCSFFileWithCache(moduleExports, title);
-  }
+  loadCSFFileByStoryId(args: { storyId: StoryId; sync: false }): Promise<CSFFile<TFramework>>;
 
-  loadCSFFileByStoryIdSync(storyId: StoryId): CSFFile<TFramework> {
+  loadCSFFileByStoryId(args: { storyId: StoryId; sync: true }): CSFFile<TFramework>;
+
+  loadCSFFileByStoryId({
+    storyId,
+    sync,
+  }: {
+    storyId: StoryId;
+    sync: boolean;
+  }): MaybePromise<CSFFile<TFramework>> {
     const { importPath, title } = this.storiesList.storyIdToMetadata(storyId);
-    const moduleExports = this.importFn(importPath);
-    if (Promise.resolve(moduleExports) === moduleExports) {
+    const moduleExportsOrPromise = this.importFn(importPath);
+
+    const isPromise = Promise.resolve(moduleExportsOrPromise) === moduleExportsOrPromise;
+    if (!isPromise) {
+      return this.processCSFFileWithCache(moduleExportsOrPromise as ModuleExports, title);
+    }
+
+    if (sync) {
       throw new Error(
         `importFn() returned a promise, did you pass an async version then call initializeSync()?`
       );
     }
-    return this.processCSFFileWithCache(moduleExports as ModuleExports, title);
-  }
 
-  async loadAllCSFFiles(): Promise<Record<Path, CSFFile<TFramework>>> {
-    const importPaths: Record<Path, StoryId> = {};
-    Object.entries(this.storiesList.storiesList.stories).forEach(([storyId, { importPath }]) => {
-      importPaths[importPath] = storyId;
-    });
-
-    const csfFileList = await Promise.all(
-      Object.entries(importPaths).map(
-        async ([importPath, storyId]): Promise<[Path, CSFFile<TFramework>]> => [
-          importPath,
-          await this.loadCSFFileByStoryId(storyId),
-        ]
-      )
+    return (moduleExportsOrPromise as Promise<ModuleExports>).then((moduleExports) =>
+      this.processCSFFileWithCache(moduleExports, title)
     );
-
-    return csfFileList.reduce((acc, [importPath, csfFile]) => {
-      acc[importPath] = csfFile;
-      return acc;
-    }, {} as Record<Path, CSFFile<TFramework>>);
   }
 
-  loadAllCSFFilesSync(): Record<Path, CSFFile<TFramework>> {
+  loadAllCSFFiles(sync: false): Promise<StoryStore<TFramework>['cachedCSFFiles']>;
+
+  loadAllCSFFiles(sync: true): StoryStore<TFramework>['cachedCSFFiles'];
+
+  loadAllCSFFiles(sync: boolean): MaybePromise<StoryStore<TFramework>['cachedCSFFiles']> {
     const importPaths: Record<Path, StoryId> = {};
     Object.entries(this.storiesList.storiesList.stories).forEach(([storyId, { importPath }]) => {
       importPaths[importPath] = storyId;
     });
 
-    const csfFileList = Object.entries(importPaths).map(([importPath, storyId]): [
-      Path,
-      CSFFile<TFramework>
-    ] => [importPath, this.loadCSFFileByStoryIdSync(storyId)]);
+    const csfFileList = Object.entries(importPaths).map(([importPath, storyId]) => ({
+      importPath,
+      csfFileOrPromise: sync
+        ? this.loadCSFFileByStoryId({ storyId, sync: true })
+        : this.loadCSFFileByStoryId({ storyId, sync: false }),
+    }));
 
-    return csfFileList.reduce((acc, [importPath, csfFile]) => {
-      acc[importPath] = csfFile;
-      return acc;
-    }, {} as Record<Path, CSFFile<TFramework>>);
+    function toObject(list: { importPath: Path; csfFile: CSFFile<TFramework> }[]) {
+      return list.reduce((acc, { importPath, csfFile }) => {
+        acc[importPath] = csfFile;
+        return acc;
+      }, {} as Record<Path, CSFFile<TFramework>>);
+    }
+
+    if (sync) {
+      return toObject(
+        csfFileList.map(({ importPath, csfFileOrPromise }) => ({
+          importPath,
+          csfFile: csfFileOrPromise,
+        })) as { importPath: Path; csfFile: CSFFile<TFramework> }[]
+      );
+    }
+    return Promise.all(
+      csfFileList.map(async ({ importPath, csfFileOrPromise }) => ({
+        importPath,
+        csfFile: await csfFileOrPromise,
+      }))
+    ).then(toObject);
   }
 
-  async cacheAllCSFFiles(): Promise<void> {
-    this.cachedCSFFiles = await this.loadAllCSFFiles();
-  }
+  cacheAllCSFFiles(sync: false): Promise<void>;
 
-  cacheAllCSFFilesSync() {
-    this.cachedCSFFiles = this.loadAllCSFFilesSync();
+  cacheAllCSFFiles(sync: true): void;
+
+  cacheAllCSFFiles(sync: boolean): MaybePromise<void> {
+    if (sync) {
+      this.cachedCSFFiles = this.loadAllCSFFiles(true);
+      return null;
+    }
+    return this.loadAllCSFFiles(false).then((csfFiles) => {
+      this.cachedCSFFiles = csfFiles;
+    });
   }
 
   async loadStory({ storyId }: { storyId: StoryId }): Promise<Story<TFramework>> {
-    const csfFile = await this.loadCSFFileByStoryId(storyId);
+    const csfFile = await this.loadCSFFileByStoryId({ storyId, sync: false });
     return this.storyFromCSFFile({ storyId, csfFile });
   }
 
