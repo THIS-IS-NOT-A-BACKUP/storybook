@@ -1,3 +1,33 @@
+## 6.4.0-rc.0 (November 12, 2021)
+
+Storybook 6.4 is in RC!! 🎉🎉🎉
+
+Hundreds of improvements and fixes, including:
+
+- ▶️ **Interactive stories** to simulate user behavior and tools to debug it
+- ⚡️ **On-demand architecture** for smaller builds and faster load times
+- ⛸ **Streamlined tooling and documentation** for easier upgrades
+- 💯 **Hundreds more fixes** and quality of life improvements
+
+Track the release in the Github: [Storybook 6.4 Release 🛠](https://github.com/storybookjs/storybook/issues/15355)
+
+## 6.4.0-beta.33 (November 12, 2021)
+
+### Features
+
+- UI: Remove `nopreview` and show redbox for any story error ([#16669](https://github.com/storybookjs/storybook/pull/16669))
+- CLI: Run automigrate at the end of `sb init` ([#16671](https://github.com/storybookjs/storybook/pull/16671))
+- UI: Docs loading state (WIP) ([#16666](https://github.com/storybookjs/storybook/pull/16666))
+
+### Bugs
+
+- Addon-actions: Omit sending window object thru the channel ([#16514](https://github.com/storybookjs/storybook/pull/16514))
+
+### Maintenance
+
+- Build: Fix CI checks ([#16535](https://github.com/storybookjs/storybook/pull/16535))
+- Build: Add eslint-plugin-storybook to the repo ([#16662](https://github.com/storybookjs/storybook/pull/16662))
+
 ## 6.4.0-beta.32 (November 12, 2021)
 
 ### Features
