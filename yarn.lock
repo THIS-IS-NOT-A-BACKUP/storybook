@@ -9411,7 +9411,7 @@ __metadata:
     loader-utils: ^2.0.0
     prettier: ^2.2.1
     prop-types: ^15.7.2
-    react-syntax-highlighter: ^15.4.2
+    react-syntax-highlighter: ^15.4.5
     regenerator-runtime: ^0.13.7
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
@@ -9526,7 +9526,6 @@ __metadata:
     "@angular/compiler": ^11.2.14
     "@angular/compiler-cli": ^11.2.14
     "@angular/core": ^11.2.14
-    "@angular/elements": ^11.2.14
     "@angular/forms": ^11.2.14
     "@angular/platform-browser": ^11.2.14
     "@angular/platform-browser-dynamic": ^11.2.14
@@ -9544,7 +9543,6 @@ __metadata:
     "@types/jest": ^26.0.16
     "@types/node": ^14.14.20 || ^16.0.0
     "@types/webpack-env": ^1.16.0
-    "@webcomponents/custom-elements": ^1.4.3
     autoprefixer: ^9.8.6
     core-js: ^3.8.2
     find-up: ^5.0.0
@@ -9577,24 +9575,18 @@ __metadata:
     "@angular/compiler": ">=6.0.0"
     "@angular/compiler-cli": ">=6.0.0"
     "@angular/core": ">=6.0.0"
-    "@angular/elements": ">=6.0.0"
     "@angular/forms": ">=6.0.0"
     "@angular/platform-browser": ">=6.0.0"
     "@angular/platform-browser-dynamic": ">=6.0.0"
     "@babel/core": "*"
     "@nrwl/workspace": ">=11.1.0"
-    "@webcomponents/custom-elements": ">=1.4.3"
     rxjs: ^6.0.0 || ^7.4.0
     typescript: ^3.4.0 || >=4.0.0
     zone.js: ^0.8.29 || ^0.9.0 || ^0.10.0 || ^0.11.0
   peerDependenciesMeta:
     "@angular/cli":
       optional: true
-    "@angular/elements":
-      optional: true
     "@nrwl/workspace":
-      optional: true
-    "@webcomponents/custom-elements":
       optional: true
   bin:
     build-storybook: ./bin/build.js
@@ -10022,7 +10014,7 @@ __metadata:
     prop-types: ^15.7.2
     react-colorful: ^5.1.2
     react-popper-tooltip: ^3.1.1
-    react-syntax-highlighter: ^15.4.2
+    react-syntax-highlighter: ^15.4.5
     react-textarea-autosize: ^8.3.0
     regenerator-runtime: ^0.13.7
     ts-dedent: ^2.0.0
@@ -41077,7 +41069,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-syntax-highlighter@npm:^15.4.2":
+"react-syntax-highlighter@npm:^15.4.5":
   version: 15.4.5
   resolution: "react-syntax-highlighter@npm:15.4.5"
   dependencies:
