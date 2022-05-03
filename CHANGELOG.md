@@ -1,3 +1,9 @@
+## 6.5.0-beta.3 (May 4, 2022)
+
+### Bug Fixes
+
+- UI: Externalize `react-syntax-highlighter` from components ([#18127](https://github.com/storybookjs/storybook/pull/18127))
+
 ## 6.5.0-beta.2 (May 2, 2022)
 
 ### Features
@@ -6,6 +12,8 @@
 
 ### Bug Fixes
 
+- Controls: Fix URL deserialization for argTypes with mapping ([#18124](https://github.com/storybookjs/storybook/pull/18124))
+- Core: Fix telemetry project root detection ([#18125](https://github.com/storybookjs/storybook/pull/18125))
 - React: Fix version detection for older versions of `react-dom` ([#18105](https://github.com/storybookjs/storybook/pull/18105))
 - CLI: Add non-monorepo testing tools to exclude lists ([#18092](https://github.com/storybookjs/storybook/pull/18092))
 
