@@ -6,19 +6,13 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "jsx": "react",
-    "module": "esnext",
+    "target": "ES2020",
+    "module": "CommonJS",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "target": "es5",
-    "types": [
-      "jest",
-      "node"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "types": ["jest", "node"],
+    "lib": ["es2017", "dom"],
     "allowJs": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -28,7 +22,5 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

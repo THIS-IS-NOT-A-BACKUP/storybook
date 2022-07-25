@@ -1,18 +1,10 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./src",
     "skipLibCheck": true,
-    "types": [
-      "webpack-env",
-      "node"
-    ],
+    "types": ["node"],
     "declaration": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "src/__tests__/**/*"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["src/__tests__/**/*"]
 }

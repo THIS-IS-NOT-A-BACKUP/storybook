@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "target": "ES2020",
+    "module": "CommonJS",
     "esModuleInterop": true,
     "jsx": "preserve",
     "skipLibCheck": true,
     "strict": true
   },
-  "include": [
-    "src/*",
-    ".storybook/main.ts"
-  ]
+  "include": ["src/*", ".storybook/main.ts"]
 }
