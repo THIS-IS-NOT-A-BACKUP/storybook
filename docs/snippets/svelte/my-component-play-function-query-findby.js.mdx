@@ -1,0 +1,29 @@
+```js
+// MyComponent.stories.js
+
+import { screen, userEvent } from '@storybook/testing-library';
+
+import MyComponent from './MyComponent.svelte';
+
+export default {
+  /* 👇 The title prop is optional.
+   * See https://storybook.js.org/docs/svelte/configure/overview#configure-story-loading
+   * to learn how to generate automatic titles
+   */
+  title: 'Async Query Methods',
+  component: MyComponent,
+};
+
+const Template = (args) => ({
+  Component: MyComponent,
+  props: args,
+});
+
+export const AsyncExample = Template.bind({});
+AsyncExample.play = async () => {
+  // Other steps
+
+  // Waits for the component to be rendered before querying the element
+  await screen.findByRole('button', { name: / button label/i }));
+};
+```

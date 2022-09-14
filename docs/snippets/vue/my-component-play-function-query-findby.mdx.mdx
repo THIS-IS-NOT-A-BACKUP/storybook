@@ -1,0 +1,29 @@
+```md
+<!-- MyComponent.stories.mdx -->
+
+<!-- MyComponent.stories.mdx -->
+
+import { Meta, Story } from '@storybook/addon-docs';
+
+import { screen, userEvent } from '@storybook/testing-library';
+
+import MyComponent from './MyComponent.vue';
+
+<Meta title="Async Query Methods" component={MyComponent} />
+
+export const Template = () => ({
+  components: { MyComponent },
+  template: '<MyComponent />',
+});
+
+<Story
+  name="AsyncExample"
+  play={async () => {
+    // Other steps
+
+    // Waits for the component to be rendered before querying the element
+    await screen.findByRole('button', { name: / button label/i }));
+  }}>
+  {Template.bind({})}
+</Story>
+```
