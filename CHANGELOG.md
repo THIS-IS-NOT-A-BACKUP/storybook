@@ -1,3 +1,46 @@
+## 7.0.0-beta.6 (December 14, 2022)
+
+#### Dependency Upgrades
+
+-   Vite: Use Vite 3 (temporarily) [#20216](https://github.com/storybooks/storybook/pull/20216)
+
+## 7.0.0-beta.5 (December 13, 2022)
+
+#### Features
+
+-   CLI: Split sb-scripts into two different migrations [#20223](https://github.com/storybooks/storybook/pull/20223)
+
+#### Bug Fixes
+
+-   Vite: Support async Vite plugins [#20194](https://github.com/storybooks/storybook/pull/20194)
+-   Telemetry: Don't send boot event when cliOptions.disableTelemetry is passed [#20144](https://github.com/storybooks/storybook/pull/20144)
+
+#### Maintenance
+
+-   CLI: Add React peer dep runtime check [#20206](https://github.com/storybooks/storybook/pull/20206)
+
+#### Dependency Upgrades
+
+-   Upgrade esbuild [#20199](https://github.com/storybooks/storybook/pull/20199)
+
+## 7.0.0-beta.4 (December 13, 2022)
+
+#### Features
+
+-   Re-enable TS 4.9 CLI templates [#20159](https://github.com/storybooks/storybook/pull/20159)
+
+#### Bug Fixes
+
+-   CLI: execute automigrations when pressing enter in the prompts [#20208](https://github.com/storybooks/storybook/pull/20208)
+-   Interactions: Fix storyId access in instrumenter [#20201](https://github.com/storybooks/storybook/pull/20201)
+-   Typescript: Fix bug with meta not working well as generic parameter for StoryObj [#20165](https://github.com/storybooks/storybook/pull/20165)
+-   SvelteKit: Support `v1.0.0-next.574` and above [#20181](https://github.com/storybooks/storybook/pull/20181)
+
+#### Build
+
+-   Svelte: Fix argTypes inference in Button component [#20212](https://github.com/storybooks/storybook/pull/20212)
+-   React-Vite: Ignore React MDX stories in sandbox [#20210](https://github.com/storybooks/storybook/pull/20210)
+
 ## 7.0.0-beta.3 (December 10, 2022)
 
 #### Bug Fixes
