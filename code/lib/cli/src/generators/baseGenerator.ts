@@ -176,7 +176,10 @@ export async function baseGenerator(
 
   if (hasInteractiveStories(rendererId)) {
     addons.push('@storybook/addon-interactions');
-    addonPackages.push('@storybook/addon-interactions', '@storybook/testing-library');
+    addonPackages.push(
+      '@storybook/addon-interactions',
+      '@storybook/testing-library@^0.0.14-next.1'
+    );
   }
 
   const files = await fse.readdir(process.cwd());
@@ -270,10 +273,12 @@ export async function baseGenerator(
   if (isNewFolder) {
     await generateStorybookBabelConfigInCWD();
   }
-  packageManager.addDependencies({ ...npmOptions, packageJson }, [
-    ...versionedPackages,
-    ...babelDependencies,
-  ]);
+
+  const depsToInstall = [...versionedPackages, ...babelDependencies];
+
+  if (depsToInstall.length > 0) {
+    packageManager.addDependencies({ ...npmOptions, packageJson }, depsToInstall);
+  }
 
   if (addScripts) {
     packageManager.addStorybookCommandInScripts({
