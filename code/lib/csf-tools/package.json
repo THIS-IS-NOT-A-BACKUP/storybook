@@ -1,6 +1,6 @@
 {
   "name": "@storybook/csf-tools",
-  "version": "7.0.0-beta.56",
+  "version": "7.0.0-beta.59",
   "description": "",
   "keywords": [
     "storybook"
@@ -41,17 +41,17 @@
     "prep": "../../../scripts/prepare/bundle.ts"
   },
   "dependencies": {
-    "@babel/types": "^7.20.2",
+    "@babel/generator": "~7.21.1",
+    "@babel/parser": "~7.21.2",
+    "@babel/traverse": "~7.21.2",
+    "@babel/types": "~7.21.2",
     "@storybook/csf": "next",
-    "@storybook/types": "7.0.0-beta.56",
+    "@storybook/types": "7.0.0-beta.59",
     "fs-extra": "^11.1.0",
     "recast": "^0.23.1",
     "ts-dedent": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/generator": "^7.20.4",
-    "@babel/parser": "^7.20.3",
-    "@babel/traverse": "^7.20.1",
     "@types/fs-extra": "^11.0.1",
     "@types/js-yaml": "^3.12.6",
     "js-yaml": "^3.14.1",
@@ -68,5 +68,5 @@
       "cjs"
     ]
   },
-  "gitHead": "26815b0ea07f3800cc514cccd242c8ab1f428b8c"
+  "gitHead": "c808723218b9a07aa5c92a440babb23c0411db99"
 }
