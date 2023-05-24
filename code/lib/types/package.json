@@ -1,6 +1,6 @@
 {
   "name": "@storybook/types",
-  "version": "7.1.0-alpha.21",
+  "version": "7.1.0-alpha.23",
   "description": "Core Storybook TS Types",
   "keywords": [
     "storybook"
@@ -43,7 +43,7 @@
     "prep": "../../../scripts/prepare/bundle.ts"
   },
   "dependencies": {
-    "@storybook/channels": "7.1.0-alpha.21",
+    "@storybook/channels": "7.1.0-alpha.23",
     "@types/babel__core": "^7.0.0",
     "@types/express": "^4.7.0",
     "file-system-cache": "^2.0.0"
@@ -61,5 +61,5 @@
       "./src/index.ts"
     ]
   },
-  "gitHead": "49d49518beeb39d14ad5f978fbf2c13e05fb5a61"
+  "gitHead": "4e6e01b944b879104250d5f4af38451724a0ed0e"
 }

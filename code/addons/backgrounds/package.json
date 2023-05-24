@@ -1,6 +1,6 @@
 {
   "name": "@storybook/addon-backgrounds",
-  "version": "7.1.0-alpha.21",
+  "version": "7.1.0-alpha.23",
   "description": "Switch backgrounds to view components in different settings",
   "keywords": [
     "addon",
@@ -76,14 +76,14 @@
     "prep": "../../../scripts/prepare/bundle.ts"
   },
   "dependencies": {
-    "@storybook/client-logger": "7.1.0-alpha.21",
-    "@storybook/components": "7.1.0-alpha.21",
-    "@storybook/core-events": "7.1.0-alpha.21",
+    "@storybook/client-logger": "7.1.0-alpha.23",
+    "@storybook/components": "7.1.0-alpha.23",
+    "@storybook/core-events": "7.1.0-alpha.23",
     "@storybook/global": "^5.0.0",
-    "@storybook/manager-api": "7.1.0-alpha.21",
-    "@storybook/preview-api": "7.1.0-alpha.21",
-    "@storybook/theming": "7.1.0-alpha.21",
-    "@storybook/types": "7.1.0-alpha.21",
+    "@storybook/manager-api": "7.1.0-alpha.23",
+    "@storybook/preview-api": "7.1.0-alpha.23",
+    "@storybook/theming": "7.1.0-alpha.23",
+    "@storybook/types": "7.1.0-alpha.23",
     "memoizerific": "^1.11.3",
     "ts-dedent": "^2.0.0"
   },
@@ -112,7 +112,7 @@
       "./src/preview.tsx"
     ]
   },
-  "gitHead": "49d49518beeb39d14ad5f978fbf2c13e05fb5a61",
+  "gitHead": "4e6e01b944b879104250d5f4af38451724a0ed0e",
   "storybook": {
     "displayName": "Backgrounds",
     "icon": "https://user-images.githubusercontent.com/263385/101991667-479cc600-3c7c-11eb-96d3-410e936252e7.png",

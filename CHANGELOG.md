@@ -1,3 +1,15 @@
+## 7.1.0-alpha.23 (May 24, 2023)
+
+#### Bug Fixes
+
+-   Core: Fix `managerHead` preset in `main.ts` [#22701](https://github.com/storybooks/storybook/pull/22701)
+
+## 7.1.0-alpha.22 (May 24, 2023)
+
+#### Bug Fixes
+
+-   Vite: Fix pnpm support by replacing @storybook/global with `window` [#22709](https://github.com/storybooks/storybook/pull/22709)
+
 ## 7.1.0-alpha.21 (May 23, 2023)
 
 #### Features
