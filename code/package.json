@@ -1,6 +1,6 @@
 {
   "name": "@storybook/root",
-  "version": "7.6.0-alpha.4",
+  "version": "7.6.0-alpha.5",
   "private": true,
   "description": "Storybook root",
   "homepage": "https://storybook.js.org/",
@@ -258,6 +258,9 @@
     "vite": "^4.0.0",
     "vite-plugin-turbosnap": "^1.0.1",
     "wait-on": "^7.0.1"
+  },
+  "devDependencies": {
+    "@chromaui/addon-visual-tests": "^0.0.114"
   },
   "dependenciesMeta": {
     "ejs": {
