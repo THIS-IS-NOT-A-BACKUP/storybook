@@ -98,18 +98,22 @@ if (!existsSync(REPROS_DIRECTORY)) {
   throw Error("Couldn't find sandbox directory. Did you forget to run generate-sandboxes?");
 }
 
-const { temporaryDirectory } = await import('tempy');
-const tmpFolder = temporaryDirectory();
-logger.log(`⏱ Created tmp folder: ${tmpFolder}`);
+async function main() {
+  const { temporaryDirectory } = await import('tempy');
+  const tmpFolder = temporaryDirectory();
+  logger.log(`⏱ Created tmp folder: ${tmpFolder}`);
 
-const options = program.opts() as PublishOptions;
+  const options = program.opts() as PublishOptions;
 
-publish({ ...options, tmpFolder }).catch(async (e) => {
-  logger.error(e);
+  publish({ ...options, tmpFolder }).catch(async (e) => {
+    logger.error(e);
 
-  if (existsSync(tmpFolder)) {
-    logger.log('🚮 Removing the temporary folder..');
-    await remove(tmpFolder);
-  }
-  process.exit(1);
-});
+    if (existsSync(tmpFolder)) {
+      logger.log('🚮 Removing the temporary folder..');
+      await remove(tmpFolder);
+    }
+    process.exit(1);
+  });
+}
+
+main();
