@@ -1,6 +1,6 @@
 {
   "name": "@storybook/docs-tools",
-  "version": "8.2.0-alpha.7",
+  "version": "8.2.0-alpha.8",
   "description": "Shared utility functions for frameworks to implement docs",
   "keywords": [
     "storybook"
@@ -66,5 +66,5 @@
       "./src/index.ts"
     ]
   },
-  "gitHead": "e6a7fd8a655c69780bc20b9749c2699e44beae17"
+  "gitHead": "e6a7fd8a655c69780bc20b9749c2699e44beae16"
 }
