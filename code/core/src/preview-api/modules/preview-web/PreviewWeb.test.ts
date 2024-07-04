@@ -3556,6 +3556,7 @@ describe('PreviewWeb', () => {
         await (preview.storyStore as StoryStore<Renderer>)?.loadStory({
           storyId: 'component-one--b',
         }),
+        {} as any,
         {} as any
       );
       await waitForRenderPhase('playing');
@@ -3663,6 +3664,7 @@ describe('PreviewWeb', () => {
             ],
             "testingLibraryRender": undefined,
             "title": "Component One",
+            "usesMount": false,
           },
           "component-one--b": {
             "argTypes": {
@@ -3712,6 +3714,7 @@ describe('PreviewWeb', () => {
             ],
             "testingLibraryRender": undefined,
             "title": "Component One",
+            "usesMount": false,
           },
           "component-one--e": {
             "argTypes": {},
@@ -3739,6 +3742,7 @@ describe('PreviewWeb', () => {
             ],
             "testingLibraryRender": undefined,
             "title": "Component One",
+            "usesMount": false,
           },
           "component-two--c": {
             "argTypes": {
@@ -3776,6 +3780,7 @@ describe('PreviewWeb', () => {
             ],
             "testingLibraryRender": undefined,
             "title": "Component Two",
+            "usesMount": false,
           },
         }
       `);

@@ -11,6 +11,7 @@ import { StorybookError } from './storybook-error';
  * to prevent manager and preview errors from having the same category and error code.
  */
 export enum Category {
+  BLOCKS = 'BLOCKS',
   DOCS_TOOLS = 'DOCS-TOOLS',
   PREVIEW_CLIENT_LOGGER = 'PREVIEW_CLIENT-LOGGER',
   PREVIEW_CHANNELS = 'PREVIEW_CHANNELS',
@@ -291,6 +292,45 @@ export class TestingLibraryMustBeConfiguredError extends StorybookError {
       },
     });
     
+    `;
+  }
+}
+
+export class NoRenderFunctionError extends StorybookError {
+  readonly category = Category.PREVIEW_API;
+
+  readonly code = 14;
+
+  constructor(public data: { id: string }) {
+    super();
+  }
+
+  template() {
+    return dedent`
+    No render function available for storyId '${this.data.id}'
+    `;
+  }
+}
+
+export class NoStoryMountedError extends StorybookError {
+  readonly category = Category.PREVIEW_API;
+
+  readonly code = 15;
+
+  template() {
+    return dedent`
+    No story is mounted in your story.
+    
+    This usually occurs when you destructure mount in the play function, but forgot to call it.
+    
+    For example:
+
+    async play({ mount, canvasElement }) {
+      // 👈mount should be called: await mount(); 
+      const canvas = within(canvasElement);
+      const button = await canvas.findByRole('button');
+      await userEvent.click(button);
+    };
     `;
   }
 }
