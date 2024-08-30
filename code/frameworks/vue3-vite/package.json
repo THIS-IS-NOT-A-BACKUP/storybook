@@ -30,6 +30,11 @@
       "types": "./dist/preset.d.ts",
       "require": "./dist/preset.js"
     },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "require": "./dist/vite.js",
+      "import": "./dist/vite.mjs"
+    },
     "./package.json": "./package.json"
   },
   "main": "dist/index.js",
@@ -74,7 +79,8 @@
   "bundler": {
     "entries": [
       "./src/index.ts",
-      "./src/preset.ts"
+      "./src/preset.ts",
+      "./src/vite.ts"
     ],
     "platform": "node"
   },
