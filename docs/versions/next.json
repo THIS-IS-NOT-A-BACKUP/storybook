@@ -1,1 +1,1 @@
-{"version":"8.5.0-alpha.6","info":{"plain":"- CLI: Fix qwik init - [#29632](https://github.com/storybookjs/storybook/pull/29632), thanks @shilman!\n- React Native Web: Add framework, CLI integration, sandboxes - [#29520](https://github.com/storybookjs/storybook/pull/29520), thanks @shilman!"}}
+{"version":"8.5.0-alpha.8","info":{"plain":"- UI: Sidebar context menu addon API - [#29557](https://github.com/storybookjs/storybook/pull/29557), thanks @ndelangen!"}}
