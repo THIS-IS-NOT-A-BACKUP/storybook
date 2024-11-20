@@ -1,13 +1,13 @@
 import React, { type SyntheticEvent, useEffect, useRef, useState } from 'react';
 
 import { Button, TooltipNote } from '@storybook/core/components';
+import { WithTooltip } from '@storybook/core/components';
 import { keyframes, styled } from '@storybook/core/theming';
 import { ChevronSmallUpIcon, PlayAllHollowIcon } from '@storybook/icons';
 
 import type { TestProviders } from '@storybook/core/core-events';
+import { useStorybookApi } from '@storybook/core/manager-api';
 
-import { WithTooltip } from '../../../components/components/tooltip/WithTooltip';
-import { useStorybookApi } from '../../../manager-api';
 import { LegacyRender } from './LegacyRender';
 
 const DEFAULT_HEIGHT = 500;
