@@ -92,6 +92,7 @@ export const init: ModuleFn<SubAPI, SubState> = ({ store, fullAPI }) => {
     runTestProvider(id, options) {
       const index = store.getState().index;
       invariant(index, 'The index is currently unavailable');
+      api.updateTestProviderState(id, { running: true });
 
       const provider = store.getState().testProviders[id];
 

@@ -122,7 +122,7 @@ export const SidebarBottomBase = ({
   useEffect(() => {
     const onCrashReport = ({ providerId, ...details }: TestingModuleCrashReportPayload) => {
       api.updateTestProviderState(providerId, {
-        details,
+        error: { name: 'Crashed!', message: details.error.message },
         running: false,
         crashed: true,
         watching: false,
