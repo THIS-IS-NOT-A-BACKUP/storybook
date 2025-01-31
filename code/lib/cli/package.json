@@ -318,7 +318,7 @@
     "@storybook/core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.3.2"
+    "typescript": "^5.7.3"
   },
   "peerDependencies": {
     "prettier": "^2 || ^3"
