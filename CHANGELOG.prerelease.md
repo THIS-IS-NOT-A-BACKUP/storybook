@@ -1,3 +1,9 @@
+## 8.6.0-beta.4
+
+- Addon-Test: Add telemetry data for Focused Tests - [#30568](https://github.com/storybookjs/storybook/pull/30568), thanks @JReinhold!
+- Core: Allow empty render functions in CSF factories - [#30565](https://github.com/storybookjs/storybook/pull/30565), thanks @kasperpeulen!
+- Core: Fix undeclared internal dependencies - [#30566](https://github.com/storybookjs/storybook/pull/30566), thanks @kasperpeulen!
+
 ## 8.6.0-beta.3
 
 - Addon-A11y: Fix preset loading when loaded via getAbsolutePath - [#30563](https://github.com/storybookjs/storybook/pull/30563), thanks @valentinpalkovic!
