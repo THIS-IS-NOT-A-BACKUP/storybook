@@ -19,6 +19,7 @@ import { ReviewProvider } from './components/ReviewProvider.tsx';
 import { ReviewToolbarHeader } from './components/ReviewToolbarHeader.tsx';
 import {
   EVENTS,
+  NOTIFIED_REVIEW_CREATED_AT_KEY,
   VISITED_REVIEW_CREATED_AT_KEY,
   reviewAvailableNotificationId,
 } from './constants.ts';
@@ -96,9 +97,9 @@ const managerApi: API = {
   resetStatusFilters: fn().mockName('api::resetStatusFilters'),
   addStatusFilters: fn().mockName('api::addStatusFilters'),
   removeStatusFilters: fn().mockName('api::removeStatusFilters'),
-  getStoryHrefs: (storyId: string, options?: { freeze?: boolean }) => ({
+  getStoryHrefs: (storyId: string, options?: { embed?: boolean; freeze?: boolean }) => ({
     managerHref: `?path=/story/${storyId}`,
-    previewHref: `iframe.html?id=${storyId}&viewMode=story${options?.freeze ? '&freeze=finished' : ''}`,
+    previewHref: `iframe.html?id=${storyId}&viewMode=story${options?.embed ? '&embed=true' : ''}${options?.freeze ? '&freeze=finished' : ''}`,
   }),
   navigate: navigateMock,
   setQueryParams: setQueryParamsMock,
@@ -484,6 +485,41 @@ export const ShowsNotificationForUnseenReview = meta.story({
     );
     await expect(await canvas.findByText('New review available')).toBeInTheDocument();
     expect(canvas.queryByText('A new review is available.')).not.toBeInTheDocument();
+  },
+});
+
+export const DismissesNotificationOnReviewVisit = meta.story({
+  render: () => <ReviewOutsideWithNotificationsHarness />,
+  parameters: {
+    routerInitialEntries: ['/?path=/review/'],
+    managerState: {
+      path: '/review/',
+      viewMode: 'review',
+    },
+  },
+  beforeEach: () => {
+    sessionStorage.removeItem(NOTIFIED_REVIEW_CREATED_AT_KEY);
+    sessionStorage.removeItem(VISITED_REVIEW_CREATED_AT_KEY);
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    try {
+      sessionStorage.setItem(NOTIFIED_REVIEW_CREATED_AT_KEY, String(reviewState.createdAt));
+      emitMock(EVENTS.DISPLAY_REVIEW, reviewState);
+      await waitFor(() =>
+        expect(clearNotificationMock).toHaveBeenCalledWith(
+          reviewAvailableNotificationId(reviewState.createdAt!)
+        )
+      );
+      expect(addNotificationMock).not.toHaveBeenCalled();
+      expect(sessionStorage.getItem(VISITED_REVIEW_CREATED_AT_KEY)).toBe(
+        String(reviewState.createdAt)
+      );
+      expect(canvas.queryByText('New review available')).not.toBeInTheDocument();
+    } finally {
+      sessionStorage.removeItem(NOTIFIED_REVIEW_CREATED_AT_KEY);
+      sessionStorage.removeItem(VISITED_REVIEW_CREATED_AT_KEY);
+    }
   },
 });
 
