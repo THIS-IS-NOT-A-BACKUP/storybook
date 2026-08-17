@@ -249,6 +249,20 @@ describe('buildStoryDocsPayload', () => {
     });
   });
 
+  it('keeps unevaluable arg source when the story file uses CRLF', async () => {
+    givenStoryFile(
+      dedent`
+        import { ButtonComponent } from './button.component';
+        export default { title: 'Example/Button', component: ButtonComponent };
+        export const Default = { args: { label: (value) => value } };
+      `.replace(/\n/g, '\r\n')
+    );
+
+    const payload = await buildStoryDocsPayload({ entry }, { getDocgenPayload: buttonDocgen() });
+
+    expect(Object.values(payload!.stories)[0].snippet).toContain(`[label]="(value) => value"`);
+  });
+
   it('builds a snippet from the snippet meta core/docgen carries alongside argTypes', async () => {
     givenStoryFile(`
       import { ButtonComponent } from './button.component';
@@ -276,6 +290,21 @@ describe('buildStoryDocsPayload', () => {
     expect(story.snippet).toContain('sb-button');
     expect(story.snippet).toContain(`[label]="'Save'"`);
     expect(story.warning).toBeUndefined();
+  });
+
+  it('slices an unevaluable arg out of a story file written with CRLF line endings', async () => {
+    givenStoryFile(
+      [
+        `import { ButtonComponent } from './button.component';`,
+        `export default { title: 'Example/Button', component: ButtonComponent };`,
+        `export const Default = { args: { label: (value) => value.trim() } };`,
+      ].join('\r\n')
+    );
+
+    const payload = await buildStoryDocsPayload({ entry }, { getDocgenPayload: buttonDocgen() });
+
+    const story = Object.values(payload!.stories)[0];
+    expect(story.snippet).toContain(`[label]="(value) => value.trim()"`);
   });
 
   it('attaches the snippet builder warning for a non-standalone component', async () => {
