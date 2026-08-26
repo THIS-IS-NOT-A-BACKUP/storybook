@@ -1,6 +1,6 @@
 {
   "name": "storybook",
-  "version": "10.6.0-alpha.8",
+  "version": "10.6.0-alpha.9",
   "description": "Storybook: Develop, document, and test UI components in isolation",
   "keywords": [
     "storybook",
@@ -207,6 +207,11 @@
       "types": "./dist/telemetry/index.d.ts",
       "code": "./src/telemetry/index.ts",
       "default": "./dist/telemetry/index.js"
+    },
+    "./internal/tools": {
+      "types": "./dist/cli/tools/sdk/index.d.ts",
+      "code": "./src/cli/tools/sdk/index.ts",
+      "default": "./dist/cli/tools/sdk/index.js"
     },
     "./internal/toolsets-docs": {
       "types": "./dist/shared/open-service/toolsets/docs/public.d.ts",
