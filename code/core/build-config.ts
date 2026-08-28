@@ -101,10 +101,12 @@ const config: BuildEntries = {
         entryPoint: './src/mocking-utils/index.ts',
       },
       {
-        // The tools SDK: one host for the toolsets a Storybook configuration registers, consumed
-        // by the `storybook tools` CLI and by embedders that drive the same tools programmatically.
         exportEntries: ['./internal/tools'],
         entryPoint: './src/cli/tools/sdk/index.ts',
+      },
+      {
+        exportEntries: ['./internal/tools/child-host'],
+        entryPoint: './src/cli/tools/sdk/child-host.ts',
       },
     ],
     browser: [

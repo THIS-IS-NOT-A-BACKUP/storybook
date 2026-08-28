@@ -3,15 +3,20 @@ import type {
   ToolsetTelemetry,
 } from '../../../shared/open-service/toolset-definition.ts';
 import type { ToolsetMethodId } from '../../../shared/open-service/toolset-names.ts';
+import type { ToolsAttachGateReason } from './errors.ts';
 import type { ToolsetJsonSchema } from './json-schema.ts';
+import type { ToolsRuntime } from './local-runtime.ts';
 
 /**
  * How the SDK hosts the target project's tools.
  *
- * `attached` talks to a running Storybook dev server, `local` loads the target configuration in
- * this process, and `auto` prefers the former and falls back to the latter.
+ * `attached` talks to a running Storybook dev server. `local` loads the target configuration
+ * without one: in this process when `cwd` already matches, otherwise in a child host started from
+ * that directory. `auto` prefers attached and falls back to local.
  */
 export type ToolsMode = 'auto' | 'attached' | 'local';
+
+export type ToolsHostKind = 'in-process' | 'child';
 
 /** Identifies the surface calling the SDK, for the attach handshake and for telemetry. */
 export type ToolsClientInfo = {
@@ -74,7 +79,7 @@ export type ToolsDescribeOptions = {
 
 export type ToolsCallOptions = {
   signal?: AbortSignal;
-  /** Storybook UI base URL for methods that need a live origin. */
+  /** Overrides the host's Storybook origin for this call. */
   origin?: string;
   telemetry?: ToolsetTelemetry;
 };
@@ -82,6 +87,16 @@ export type ToolsCallOptions = {
 type ToolsBase = {
   clientInfo: Required<ToolsClientInfo>;
   storybook: ToolsStorybookInfo;
+  /** The `mode` passed to `createTools`; `auto` when omitted. */
+  requestedMode: ToolsMode;
+  /** `in-process` unless this host is a project-local child. */
+  host: ToolsHostKind;
+  /** Set when `auto` mode could not attach and loaded the project configuration instead. */
+  fallbackNotice?: string;
+  /** Why `auto` loaded locally instead of attaching. */
+  fallbackReason?: ToolsAttachGateReason;
+  /** Toolset registry and service accessor for an in-process host. Empty when this host is a child. */
+  runtime: ToolsRuntime;
   describe(options?: ToolsDescribeOptions): Promise<ToolsetCatalog>;
   /**
    * Run one tool by its dotted `toolsetId.methodName` reference.
@@ -102,11 +117,14 @@ type ToolsBase = {
   close(): Promise<void>;
 };
 
-/** A host that loaded the target configuration in this process. */
+/**
+ * A host that loaded the target configuration without a running Storybook.
+ */
 export type LocalTools = ToolsBase & {
   mode: 'local';
 };
 
+/** A host that joined a running Storybook over its channel. */
 export type AttachedTools = ToolsBase & {
   mode: 'attached';
 };

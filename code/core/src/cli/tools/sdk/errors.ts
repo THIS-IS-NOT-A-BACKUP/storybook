@@ -14,16 +14,21 @@ export type AttachUnavailableReason =
  * `remediation` is the whole message: it is written for the agent or developer that triggered the
  * call and names the next step, which is what `agentFacing` declares. `instances` carries every
  * live record the SDK knows about so a caller can point at another project or disambiguate a
- * `multiple-matches` failure itself.
+ * `multiple-matches` failure itself. Channel tokens are omitted so logging the error cannot leak
+ * them.
  */
 export class AttachUnavailableError extends StorybookError {
-  constructor(
-    public data: {
-      reason: AttachUnavailableReason;
-      instances: StorybookInstanceRecord[];
-      remediation: string;
-    }
-  ) {
+  public data: {
+    reason: AttachUnavailableReason;
+    instances: StorybookInstanceRecord[];
+    remediation: string;
+  };
+
+  constructor(data: {
+    reason: AttachUnavailableReason;
+    instances: StorybookInstanceRecord[];
+    remediation: string;
+  }) {
     super({
       name: 'AttachUnavailableError',
       category: Category.CLI,
@@ -31,6 +36,15 @@ export class AttachUnavailableError extends StorybookError {
       message: data.remediation,
       agentFacing: true,
     });
+    this.data = {
+      reason: data.reason,
+      instances: data.instances.map((instance) => {
+        const rest = { ...instance };
+        delete rest.token;
+        return rest;
+      }),
+      remediation: data.remediation,
+    };
   }
 }
 
@@ -106,4 +120,37 @@ export class ToolsRuntimeError extends StorybookError {
       message: data.message,
     });
   }
+}
+
+export function isAttachGateError(
+  error: unknown
+): error is AttachUnavailableError | EnvironmentMismatchError | SpawnFailedError {
+  return (
+    error instanceof AttachUnavailableError ||
+    error instanceof EnvironmentMismatchError ||
+    error instanceof SpawnFailedError
+  );
+}
+
+/** Why attached mode was not used, either as a hard failure or as an `auto` fallback. */
+export type ToolsAttachGateReason =
+  | AttachUnavailableReason
+  | 'environment-mismatch'
+  | 'spawn-failed';
+
+export function attachGateReasonFromError(
+  error: AttachUnavailableError | EnvironmentMismatchError | SpawnFailedError
+): ToolsAttachGateReason;
+export function attachGateReasonFromError(error: unknown): ToolsAttachGateReason | undefined;
+export function attachGateReasonFromError(error: unknown): ToolsAttachGateReason | undefined {
+  if (error instanceof AttachUnavailableError) {
+    return error.data.reason;
+  }
+  if (error instanceof EnvironmentMismatchError) {
+    return 'environment-mismatch';
+  }
+  if (error instanceof SpawnFailedError) {
+    return 'spawn-failed';
+  }
+  return undefined;
 }
